@@ -1,5 +1,9 @@
 venv/
 .idea
+*.log
+*bin/
+configs/*-kubeconfig
+tf/*terraform*
 
 *.pyc
 __pycache__/

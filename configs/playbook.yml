@@ -1,0 +1,20 @@
+---
+- name: Provision docker container
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Create app directory
+      file:
+        path: /app
+        state: directory
+
+    - name: Copy application files
+      copy: src={{ item.src }} dest={{ item.dest }}
+      with_items:
+        - { src: '{{ srcdir }}/app.py', dest: '/app/app.py' }
+        - { src: '{{ srcdir }}/logging.conf', dest: '/app/logging.conf' }
+        - { src: '{{ srcdir }}/requirements.txt', dest: '/app/requirements.txt' }
+
+    - name: Install dependencies
+      pip:
+        requirements: /app/requirements.txt

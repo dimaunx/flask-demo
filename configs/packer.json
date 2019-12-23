@@ -1,0 +1,40 @@
+{
+  "builders": [
+    {
+      "type": "docker",
+      "image": "python:3.7-alpine",
+      "commit": "true",
+      "run_command": [
+        "-d",
+        "-i",
+        "-t",
+        "{{.Image}}",
+        "/bin/sh"
+      ],
+      "changes": [
+        "WORKDIR /app",
+        "CMD [\"python\", \"app.py\"]"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "user": "root",
+      "playbook_file": "{{user `configdir`}}/playbook.yml",
+      "extra_arguments": [
+        "--extra-vars",
+        "srcdir={{user `srcdir`}}"
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "{{user `project_name`}}",
+        "tag": "{{user `build`}}"
+      }
+    ]
+  ]
+}
